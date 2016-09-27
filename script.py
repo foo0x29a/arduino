@@ -1,10 +1,5 @@
 #!/usr/bin/python
 
-"""
-http://www.roguebasin.com/index.php?title=Bresenham%27s_Line_Algorithm#Python
-def get_line(start, end):
-"""
-
 import subprocess as sub
 import serial
 
@@ -15,8 +10,10 @@ def get_serial_port():
 	return '/dev/' + out.strip()
 
 def serial_write(ser, string):
-	ser.write(string + '|')
+	ser.write(string + '\n')
 
+
+# Based on: http://www.roguebasin.com/index.php?title=Bresenham%27s_Line_Algorithm#Python
 def draw_line(x1, y1, x2, y2):
     dx = x2 - x1
     dy = y2 - y1
