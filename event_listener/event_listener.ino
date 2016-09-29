@@ -16,6 +16,9 @@ int m_y_04 = 6;
 int time01 = 10;
 int time00 = 0;
 
+int current_x = 0;
+int current_y = 0;
+
 void setup() {
   Serial.begin(9600);         // Initialize serial
   inputString.reserve(200);   // Reserve 200 bytes for the inputString
@@ -31,40 +34,56 @@ void setup() {
   pinMode(m_y_04, OUTPUT);
 }
 
-void inc_and_sleep(int pin){
+void signal_and_sleep(int pin){
   digitalWrite(pin, HIGH);
   delay(time01);
   digitalWrite(pin, LOW);
   delay(time00);
 }
 
+void inc_x(){
+  current_x++;
+  signal_and_sleep(m_x_01);
+  signal_and_sleep(m_x_02);
+  signal_and_sleep(m_x_03);
+  signal_and_sleep(m_x_04);
+}
+
+void inc_y(){
+  current_y++;
+  signal_and_sleep(m_y_01);
+  signal_and_sleep(m_y_02);
+  signal_and_sleep(m_y_03);
+  signal_and_sleep(m_y_04);
+}
+
+void dec_x(){
+  current_x--;
+  signal_and_sleep(m_x_04);
+  signal_and_sleep(m_x_03);
+  signal_and_sleep(m_x_02);
+  signal_and_sleep(m_x_01);
+}
+
+void dec_y(){
+  current_y--;
+  signal_and_sleep(m_y_04);
+  signal_and_sleep(m_y_03);
+  signal_and_sleep(m_y_02);
+  signal_and_sleep(m_y_01);
+}
+
 void loop() {
   if (stringComplete) {
     Serial.println(inputString);
-    if(inputString.startsWith("INC_X")){
-        inc_and_sleep(m_x_01);
-        inc_and_sleep(m_x_02);
-        inc_and_sleep(m_x_03);
-        inc_and_sleep(m_x_04);    
-    }
-    else if(inputString.startsWith("INC_Y")){
-        inc_and_sleep(m_y_01);
-        inc_and_sleep(m_y_02);
-        inc_and_sleep(m_y_03);
-        inc_and_sleep(m_y_04);    
-    }
-    else if(inputString.startsWith("DEC_X")){
-        inc_and_sleep(m_x_04);
-        inc_and_sleep(m_x_03);
-        inc_and_sleep(m_x_02);
-        inc_and_sleep(m_x_01);    
-    }
-    else if(inputString.startsWith("DEC_Y")){
-        inc_and_sleep(m_y_04);
-        inc_and_sleep(m_y_03);
-        inc_and_sleep(m_y_02);
-        inc_and_sleep(m_y_01);    
-    }    
+    if(inputString.startsWith("INC_X"))
+        inc_x();    
+    else if(inputString.startsWith("INC_Y"))
+        inc_y();
+    else if(inputString.startsWith("DEC_X"))
+        dec_x();
+    else if(inputString.startsWith("DEC_Y"))
+        dec_y();    
     delay(50);
     inputString = "";
     stringComplete = false;
