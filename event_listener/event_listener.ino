@@ -42,17 +42,29 @@ void loop() {
   if (stringComplete) {
     Serial.println(inputString);
     if(inputString.startsWith("INC_X")){
-      inc_and_sleep(m_x_01);
-      inc_and_sleep(m_x_02);
-      inc_and_sleep(m_x_03);
-      inc_and_sleep(m_x_04);
+        inc_and_sleep(m_x_01);
+        inc_and_sleep(m_x_02);
+        inc_and_sleep(m_x_03);
+        inc_and_sleep(m_x_04);    
     }
     else if(inputString.startsWith("INC_Y")){
-      inc_and_sleep(m_y_01);
-      inc_and_sleep(m_y_02);
-      inc_and_sleep(m_y_03);
-      inc_and_sleep(m_y_04);
+        inc_and_sleep(m_y_01);
+        inc_and_sleep(m_y_02);
+        inc_and_sleep(m_y_03);
+        inc_and_sleep(m_y_04);    
     }
+    else if(inputString.startsWith("DEC_X")){
+        inc_and_sleep(m_x_04);
+        inc_and_sleep(m_x_03);
+        inc_and_sleep(m_x_02);
+        inc_and_sleep(m_x_01);    
+    }
+    else if(inputString.startsWith("DEC_Y")){
+        inc_and_sleep(m_y_04);
+        inc_and_sleep(m_y_03);
+        inc_and_sleep(m_y_02);
+        inc_and_sleep(m_y_01);    
+    }    
     delay(50);
     inputString = "";
     stringComplete = false;
