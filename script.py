@@ -10,6 +10,7 @@ def get_serial_port():
 	return '/dev/' + out.strip()
 
 def serial_write(ser, string):
+	print string
 	ser.write(string + '\n')
 
 
@@ -59,9 +60,9 @@ def draw_line(x1, y1, x2, y2):
 
 def draw(ser, t):
 	x0 = t[0][0]
-	serial_write(ser, "MOV_X " + x0)
+	serial_write(ser, "MOV_X " + str(x0))
 	y0 = t[0][1]
-	serial_write(ser, "MOV_Y " + y0)
+	serial_write(ser, "MOV_Y " + str(y0))
 	for x1, y1 in t:
 		if(x1 > x0):
 			serial_write(ser, "INC_X")

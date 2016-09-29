@@ -31,7 +31,7 @@ void setup() {
   pinMode(m_y_04, OUTPUT);
 }
 
-void inc_and_sleep(pin){
+void inc_and_sleep(int pin){
   digitalWrite(pin, HIGH);
   delay(time01);
   digitalWrite(pin, LOW);
@@ -40,6 +40,7 @@ void inc_and_sleep(pin){
 
 void loop() {
   if (stringComplete) {
+    Serial.println(inputString);
     if(inputString.startsWith("INC_X")){
       inc_and_sleep(m_x_01);
       inc_and_sleep(m_x_02);
