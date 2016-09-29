@@ -1,3 +1,5 @@
+#include <string.h>
+
 String inputString = "";         // A string to hold incoming data
 boolean stringComplete = false;  // Whether the string is complete
 
@@ -13,11 +15,10 @@ int m_y_02 = 8;
 int m_y_03 = 7;
 int m_y_04 = 6;
 
-int time01 = 10;
-int time00 = 0;
-
 int current_x = 0;
 int current_y = 0;
+
+const char SPACE_CHAR = ' ';
 
 void setup() {
   Serial.begin(9600);         // Initialize serial
@@ -36,9 +37,9 @@ void setup() {
 
 void signal_and_sleep(int pin){
   digitalWrite(pin, HIGH);
-  delay(time01);
+  delay(10);
   digitalWrite(pin, LOW);
-  delay(time00);
+  delay(0);
 }
 
 void inc_x(){
@@ -73,17 +74,41 @@ void dec_y(){
   signal_and_sleep(m_y_01);
 }
 
+void mov_x(String inputString){
+  char inputChars[inputString.length() - 6];
+  inputString.substring(6).toCharArray(inputChars, inputString.length() - 6);
+  int desired_x = atoi(inputChars);
+  while(desired_x > current_x)
+    inc_x();
+  while(desired_x < current_x)
+    dec_x();
+}
+
+void mov_y(String inputString){
+  char inputChars[inputString.length() - 6];
+  inputString.substring(6).toCharArray(inputChars, inputString.length() - 6);
+  int desired_y = atoi(inputChars);
+  while(desired_y > current_y)
+    inc_y();
+  while(desired_y < current_y)
+    dec_y();
+}
+
 void loop() {
   if (stringComplete) {
     Serial.println(inputString);
     if(inputString.startsWith("INC_X"))
-        inc_x();    
+      inc_x();
     else if(inputString.startsWith("INC_Y"))
-        inc_y();
+      inc_y();
     else if(inputString.startsWith("DEC_X"))
-        dec_x();
+      dec_x();
     else if(inputString.startsWith("DEC_Y"))
-        dec_y();    
+      dec_y();
+    else if(inputString.startsWith("MOV_X"))
+      mov_x(inputString);
+    else if(inputString.startsWith("MOV_Y"))
+      mov_y(inputString);
     delay(50);
     inputString = "";
     stringComplete = false;

@@ -59,6 +59,7 @@ def draw_line(x1, y1, x2, y2):
     return points
 
 def draw(ser, t):
+	import time
 	x0 = t[0][0]
 	serial_write(ser, "MOV_X " + str(x0))
 	y0 = t[0][1]
@@ -74,6 +75,8 @@ def draw(ser, t):
 			serial_write(ser, "DEC_Y")
 		x0 = x1
 		y0 = y1
+
+		time.sleep(0.1)
 
 def init():
 	port = get_serial_port()
