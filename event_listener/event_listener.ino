@@ -75,9 +75,7 @@ void dec_y(){
 }
 
 void mov_x(String inputString){
-  char inputChars[inputString.length() - 6];
-  inputString.substring(6).toCharArray(inputChars, inputString.length() - 6);
-  int desired_x = atoi(inputChars);
+  int desired_x = inputString.toInt();
   while(desired_x > current_x)
     inc_x();
   while(desired_x < current_x)
@@ -85,9 +83,7 @@ void mov_x(String inputString){
 }
 
 void mov_y(String inputString){
-  char inputChars[inputString.length() - 6];
-  inputString.substring(6).toCharArray(inputChars, inputString.length() - 6);
-  int desired_y = atoi(inputChars);
+  int desired_y = inputString.toInt();
   while(desired_y > current_y)
     inc_y();
   while(desired_y < current_y)
