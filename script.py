@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import matplotlib.pyplot as plt
 import subprocess as sub
 import serial
 
@@ -19,12 +20,15 @@ def draw_circle(xm, ym, r):
 	x = - r
 	y = 0
 	err = 2 - 2 * r
-	points = []
+	p1 = []
+	p2 = []
+	p3 = []
+	p4 = []
 	while True:
-		points.append((xm - x, ym + y)) # 1st quadrant
-		points.append((xm - y, ym - x)) # 2nd quadrant
-		points.append((xm + x, ym - y)) # 3rd quadrant
-		points.append((xm + y, ym + x)) # 4th quadrant
+		p1.append((xm - x, ym + y)) # 1st quadrant
+		p2.append((xm - y, ym - x)) # 2nd quadrant
+		p3.append((xm + x, ym - y)) # 3rd quadrant
+		p4.append((xm + y, ym + x)) # 4th quadrant
 		r = err
 		if(r <= y):
 			y += 1
@@ -33,7 +37,7 @@ def draw_circle(xm, ym, r):
 			x += 1
 			err += x * 2 + 1
 		if(x >= 0):
-			return points
+			return p1 + p2 + p3 + p4
 
 def draw_ellipse(xm, ym, a, b):
 	x0 = xm - a
@@ -53,12 +57,15 @@ def draw_ellipse(xm, ym, a, b):
 	a *= 8 * a
 	b1 = 8 * b * b
 	#"""
-	points = []
+	p1 = []
+	p2 = []
+	p3 = []
+	p4 = []
 	while True:
-		points.append((x1, y0)) # 1st quadrant
-		points.append((x0, y0)) # 2nd quadrant
-		points.append((x0, y1)) # 3rd quadrant
-		points.append((x1, y1)) # 4th quadrant
+		p1.append((x1, y0)) # 1st quadrant
+		p2.append((x0, y0)) # 2nd quadrant
+		p3.append((x0, y1)) # 3rd quadrant
+		p4.append((x1, y1)) # 4th quadrant
 		e2 = 2 * err
 		if e2 <= dy:
 			y0 += 1
@@ -76,13 +83,13 @@ def draw_ellipse(xm, ym, a, b):
 			break
 		
 	while y0 - y1 < b: # In too early break
-		points.append((x0 - 1, y0))
-		points.append((x1 + 1, y0))
+		p1.append((x0 - 1, y0))
+		p2.append((x1 + 1, y0))
 		y0 += 1
-		points.append((x0 - 1, y1))
-		points.append((x1 + 1, y1))
+		p3.append((x0 - 1, y1))
+		p4.append((x1 + 1, y1))
 		y1 -= 1
-	return points		
+	return p1 + p2 + p3 + p4		
 
 def draw_line(x0, y0, x1, y1):
 	dx = abs(x1 - x0)
@@ -122,14 +129,43 @@ def draw(ser, t):
 		x0 = x1
 		y0 = y1
 
-		time.sleep(0.1)
+		time.sleep(1)
 
+def plot_twitter(p, name):
+	x = []
+	y = []
+	
+	plt.ylabel(name)
+	for i in p:
+		x.append(i[0])
+		y.append(i[1])
+		
+	plt.plot(x,y)
+	plt.show()
+
+def plot_twister_carpado(p, name):
+	
+	plt.ylabel(name)
+	
+	for i in p:
+		plt.plot(i)
+	
+	plt.show()
+	
 def init():
 	port = get_serial_port()
 	ser = serial.Serial(port, 9600)
 	return ser
 
+
 if __name__=='__main__':
+	
 	ser = init()
-	p = draw_line(100, 100, 200, 400)
-	draw(ser, p)
+	#p = draw_line(100, 100, 200, 400)
+	#p = draw_ellipse(100,100,50,75)
+	p = draw_circle(100,100,50)
+	
+	print p	
+	#plot_twister_carpado(p,'sadboi')
+	
+	#draw(ser, p)
