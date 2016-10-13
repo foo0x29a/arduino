@@ -37,9 +37,9 @@ void setup() {
 
 void signal_and_sleep(int pin){
   digitalWrite(pin, HIGH);
-  delay(10);
+  delay(200);
   digitalWrite(pin, LOW);
-  delay(0);
+  delay(100);
 }
 
 void inc_x(){
