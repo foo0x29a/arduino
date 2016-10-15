@@ -17,6 +17,8 @@ int m_y_04 = 6;
 
 int current_x = 0;
 int current_y = 0;
+int x_state = m_x_01; /* Last/next X pin */
+int y_state = m_y_01; /* Last/next Y pin */
 
 const char SPACE_CHAR = ' ';
 
@@ -44,34 +46,78 @@ void signal_and_sleep(int pin){
 
 void inc_x(){
   current_x++;
-  signal_and_sleep(m_x_01);
-  signal_and_sleep(m_x_02);
-  signal_and_sleep(m_x_03);
-  signal_and_sleep(m_x_04);
+  switch(x_state){
+    case m_x_01:
+      x_state = m_x_02;
+      break;
+    case m_x_02:
+      x_state = m_x_03;
+      break;
+    case m_x_03:
+      x_state = m_x_04;
+      break;
+    case m_x_04:
+      x_state = m_x_01;
+      break;
+  }
+  signal_and_sleep(x_state);
 }
 
 void inc_y(){
   current_y++;
-  signal_and_sleep(m_y_01);
-  signal_and_sleep(m_y_02);
-  signal_and_sleep(m_y_03);
-  signal_and_sleep(m_y_04);
+  switch(y_state){
+    case m_y_01:
+      y_state = m_y_02;
+      break;
+    case m_y_02:
+      y_state = m_y_03;
+      break;
+    case m_y_03:
+      y_state = m_y_04;
+      break;
+    case m_y_04:
+      y_state = m_y_01;
+      break;
+  }
+  signal_and_sleep(y_state);
 }
 
 void dec_x(){
   current_x--;
-  signal_and_sleep(m_x_04);
-  signal_and_sleep(m_x_03);
-  signal_and_sleep(m_x_02);
-  signal_and_sleep(m_x_01);
+  switch(x_state){
+    case m_x_01:
+      x_state = m_x_04;
+      break;
+    case m_x_02:
+      x_state = m_x_01;
+      break;
+    case m_x_03:
+      x_state = m_x_02;
+      break;
+    case m_x_04:
+      x_state = m_x_03;
+      break;
+  }
+  signal_and_sleep(x_state);
 }
 
 void dec_y(){
   current_y--;
-  signal_and_sleep(m_y_04);
-  signal_and_sleep(m_y_03);
-  signal_and_sleep(m_y_02);
-  signal_and_sleep(m_y_01);
+  switch(y_state){
+    case m_y_01:
+      y_state = m_y_04;
+      break;
+    case m_y_02:
+      y_state = m_y_01;
+      break;
+    case m_y_03:
+      y_state = m_y_02;
+      break;
+    case m_y_04:
+      y_state = m_y_03;
+      break;
+  }
+  signal_and_sleep(y_state);
 }
 
 void mov_x(String inputString){
