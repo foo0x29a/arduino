@@ -3,21 +3,21 @@
 String inputString = "";         // A string to hold incoming data
 boolean stringComplete = false;  // Whether the string is complete
 
-/* X axis */
+// X axis
 #define M_X_01 13
 #define M_X_02 12
 #define M_X_03 11
 #define M_X_04 10
-int x_state = M_X_01; /* Current X pin */
+int x_state = M_X_01; // Current X pin
 
-/* Y axis */
+// Y axis
 #define M_Y_01 9
 #define M_Y_02 8
 #define M_Y_03 7
 #define M_Y_04 6
-int y_state = M_Y_01; /* Current Y pin */
+int y_state = M_Y_01; // Current Y pin
 
-/* Current cartesians positions */
+// Current cartesians positions
 int current_x = 0;
 int current_y = 0;
 
