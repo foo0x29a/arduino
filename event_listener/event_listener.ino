@@ -4,21 +4,22 @@ String inputString = "";         // A string to hold incoming data
 boolean stringComplete = false;  // Whether the string is complete
 
 /* X axis */
-int m_x_01 = 13;
-int m_x_02 = 12;
-int m_x_03 = 11;
-int m_x_04 = 10;
+#define M_X_01 13
+#define M_X_02 12
+#define M_X_03 11
+#define M_X_04 10
+int x_state = M_X_01; /* Current X pin */
 
 /* Y axis */
-int m_y_01 = 9;
-int m_y_02 = 8;
-int m_y_03 = 7;
-int m_y_04 = 6;
+#define M_Y_01 9
+#define M_Y_02 8
+#define M_Y_03 7
+#define M_Y_04 6
+int y_state = M_Y_01; /* Current Y pin */
 
+/* Current cartesians positions */
 int current_x = 0;
 int current_y = 0;
-int x_state = m_x_01; /* Last/next X pin */
-int y_state = m_y_01; /* Last/next Y pin */
 
 const char SPACE_CHAR = ' ';
 
@@ -26,15 +27,15 @@ void setup() {
   Serial.begin(9600);         // Initialize serial
   inputString.reserve(200);   // Reserve 200 bytes for the inputString
 
-  pinMode(m_x_01, OUTPUT);
-  pinMode(m_x_02, OUTPUT);
-  pinMode(m_x_03, OUTPUT);
-  pinMode(m_x_04, OUTPUT);
+  pinMode(M_X_01, OUTPUT);
+  pinMode(M_X_02, OUTPUT);
+  pinMode(M_X_03, OUTPUT);
+  pinMode(M_X_04, OUTPUT);
 
-  pinMode(m_y_01, OUTPUT);
-  pinMode(m_y_02, OUTPUT);
-  pinMode(m_y_03, OUTPUT);
-  pinMode(m_y_04, OUTPUT);
+  pinMode(M_Y_01, OUTPUT);
+  pinMode(M_Y_02, OUTPUT);
+  pinMode(M_Y_03, OUTPUT);
+  pinMode(M_Y_04, OUTPUT);
 }
 
 void signal_and_sleep(int pin){
@@ -47,17 +48,17 @@ void signal_and_sleep(int pin){
 void inc_x(){
   current_x++;
   switch(x_state){
-    case m_x_01:
-      x_state = m_x_02;
+    case M_X_01:
+      x_state = M_X_02;
       break;
-    case m_x_02:
-      x_state = m_x_03;
+    case M_X_02:
+      x_state = M_X_03;
       break;
-    case m_x_03:
-      x_state = m_x_04;
+    case M_X_03:
+      x_state = M_X_04;
       break;
-    case m_x_04:
-      x_state = m_x_01;
+    case M_X_04:
+      x_state = M_X_01;
       break;
   }
   signal_and_sleep(x_state);
@@ -66,17 +67,17 @@ void inc_x(){
 void inc_y(){
   current_y++;
   switch(y_state){
-    case m_y_01:
-      y_state = m_y_02;
+    case M_Y_01:
+      y_state = M_Y_02;
       break;
-    case m_y_02:
-      y_state = m_y_03;
+    case M_Y_02:
+      y_state = M_Y_03;
       break;
-    case m_y_03:
-      y_state = m_y_04;
+    case M_Y_03:
+      y_state = M_Y_04;
       break;
-    case m_y_04:
-      y_state = m_y_01;
+    case M_Y_04:
+      y_state = M_Y_01;
       break;
   }
   signal_and_sleep(y_state);
@@ -85,17 +86,17 @@ void inc_y(){
 void dec_x(){
   current_x--;
   switch(x_state){
-    case m_x_01:
-      x_state = m_x_04;
+    case M_X_01:
+      x_state = M_X_04;
       break;
-    case m_x_02:
-      x_state = m_x_01;
+    case M_X_02:
+      x_state = M_X_01;
       break;
-    case m_x_03:
-      x_state = m_x_02;
+    case M_X_03:
+      x_state = M_X_02;
       break;
-    case m_x_04:
-      x_state = m_x_03;
+    case M_X_04:
+      x_state = M_X_03;
       break;
   }
   signal_and_sleep(x_state);
@@ -104,17 +105,17 @@ void dec_x(){
 void dec_y(){
   current_y--;
   switch(y_state){
-    case m_y_01:
-      y_state = m_y_04;
+    case M_Y_01:
+      y_state = M_Y_04;
       break;
-    case m_y_02:
-      y_state = m_y_01;
+    case M_Y_02:
+      y_state = M_Y_01;
       break;
-    case m_y_03:
-      y_state = m_y_02;
+    case M_Y_03:
+      y_state = M_Y_02;
       break;
-    case m_y_04:
-      y_state = m_y_03;
+    case M_Y_04:
+      y_state = M_Y_03;
       break;
   }
   signal_and_sleep(y_state);
