@@ -5,10 +5,11 @@ import subprocess as sub
 import serial
 
 def get_serial_port():
-	cmd = 'dmesg | egrep ttyACM | cut -f3 -d: | tail -n1'
-	p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE, shell=True)
-	out, err = p.communicate()
-	return '/dev/' + out.strip()
+	#cmd = 'dmesg | egrep ttyACM | cut -f3 -d: | tail -n1'
+	#p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE, shell=True)
+	#out, err = p.communicate()
+	#return '/dev/' + out.strip()
+	return '/dev/ttyUSB0'
 
 def serial_write(ser, string):
 	print string
@@ -52,7 +53,7 @@ def draw_ellipse(xm, ym, a, b):
 	#""" Starting pixels
 	y0 += (b + 1) / 2
 	y1 = y0 - b1
-	#"""	
+	#"""
 	#"""
 	a *= 8 * a
 	b1 = 8 * b * b
@@ -81,7 +82,7 @@ def draw_ellipse(xm, ym, a, b):
 			err += dx
 		if x0 > x1:
 			break
-		
+
 	while y0 - y1 < b: # In too early break
 		p1.append((x0 - 1, y0))
 		p2.append((x1 + 1, y0))
@@ -89,7 +90,7 @@ def draw_ellipse(xm, ym, a, b):
 		p3.append((x0 - 1, y1))
 		p4.append((x1 + 1, y1))
 		y1 -= 1
-	return p1 + p2 + p3 + p4		
+	return p1 + p2 + p3 + p4
 
 def draw_line(x0, y0, x1, y1):
 	dx = abs(x1 - x0)
@@ -109,7 +110,7 @@ def draw_line(x0, y0, x1, y1):
 			x0 += sx
 		if e2 <= dx:
 			err += dx
-			y0 += sy	
+			y0 += sy
 
 def draw(ser, t):
 	import time
@@ -129,29 +130,29 @@ def draw(ser, t):
 		x0 = x1
 		y0 = y1
 
-		time.sleep(1)
+		time.sleep(0.3)
 
 def plot_twitter(p, name):
 	x = []
 	y = []
-	
+
 	plt.ylabel(name)
 	for i in p:
 		x.append(i[0])
 		y.append(i[1])
-		
+
 	plt.plot(x,y)
 	plt.show()
 
 def plot_twister_carpado(p, name):
-	
+
 	plt.ylabel(name)
-	
+
 	for i in p:
 		plt.plot(i)
-	
+
 	plt.show()
-	
+
 def init():
 	port = get_serial_port()
 	ser = serial.Serial(port, 9600)
@@ -159,13 +160,17 @@ def init():
 
 
 if __name__=='__main__':
-	
+
 	ser = init()
 	#p = draw_line(100, 100, 200, 400)
+	#p = draw_line(100, 0, 0, 100)
 	#p = draw_ellipse(100,100,50,75)
-	p = draw_circle(100,100,50)
-	
-	print p	
+	#p = draw_circle(100,100,50)
+
+	#print p
 	#plot_twister_carpado(p,'sadboi')
-	
-	#draw(ser, p)
+	p = draw_line(0,0,0,100)
+	p += draw_line(0,100,100,200)
+	p += draw_line(100,200,100,100)
+	p += draw_line(100,100,0,0)
+	draw(ser, p)

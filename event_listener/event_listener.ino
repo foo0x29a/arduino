@@ -17,6 +17,10 @@ int x_state = M_X_01; // Current X pin
 #define M_Y_04 6
 int y_state = M_Y_01; // Current Y pin
 
+// Switch pins
+#define SWITCH_X 0
+#define SWITCH_Y 1
+
 // Current cartesians positions
 int current_x = 0;
 int current_y = 0;
@@ -36,6 +40,25 @@ void setup() {
   pinMode(M_Y_02, OUTPUT);
   pinMode(M_Y_03, OUTPUT);
   pinMode(M_Y_04, OUTPUT);
+
+  pinMode(SWITCH_X, INPUT);
+  pinMode(SWITCH_Y, INPUT);
+
+  // Resetting X axis
+  int x_origin = HIGH;
+  while(x_origin == HIGH){
+    dec_x();
+    x_origin = digitalRead(SWITCH_X);
+  }
+  current_x = 0;
+
+  // Resetting Y axis
+  int y_origin = HIGH;
+  while(y_origin == HIGH){
+    dec_y();
+    y_origin = digitalRead(SWITCH_Y);
+  }
+  current_y = 0;
 }
 
 void signal_and_sleep(int pin){
