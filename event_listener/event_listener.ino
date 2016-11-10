@@ -17,6 +17,13 @@ int x_state = M_X_01; // Current X pin
 #define M_Y_04 6
 int y_state = M_Y_01; // Current Y pin
 
+// Z axis
+#define M_Z_01 3
+#define M_Z_02 2
+#define M_Z_03 1
+#define M_Z_04 0
+int z_state = M_Z_01; // Current Y pin
+
 // Switch pins
 #define SWITCH_X 5
 #define SWITCH_Y 4
@@ -29,18 +36,11 @@ int current_y = 0;
 
 const char SPACE_CHAR = ' ';
 
-void signal_and_sleep(int pin){
+void signal_and_sleep(int pin, int t){
   digitalWrite(pin, HIGH);
-  delay(20);
+  delay(t);
   digitalWrite(pin, LOW);
-  delay(20);
-}
-
-void signal_and_sleepi(int pin){
-  digitalWrite(pin, HIGH);
-  delay(2);
-  digitalWrite(pin, LOW);
-  delay(2);
+  delay(t);
 }
 
 void inc_x(){
@@ -59,7 +59,7 @@ void inc_x(){
       x_state = M_X_01;
       break;
   }
-  signal_and_sleep(x_state);
+  signal_and_sleep(x_state, 20);
 }
 
 void inc_y(){
@@ -78,7 +78,7 @@ void inc_y(){
       y_state = M_Y_01;
       break;
   }
-  signal_and_sleep(y_state);
+  signal_and_sleep(y_state, 20);
 }
 
 void dec_x(){
@@ -97,7 +97,7 @@ void dec_x(){
       x_state = M_X_03;
       break;
   }
-  signal_and_sleep(x_state);
+  signal_and_sleep(x_state, 20);
 }
 
 void dec_y(){
@@ -116,7 +116,7 @@ void dec_y(){
       y_state = M_Y_03;
       break;
   }
-  signal_and_sleep(y_state);
+  signal_and_sleep(y_state, 20);
 }
 
 void dec_xi(){
@@ -135,7 +135,7 @@ void dec_xi(){
       x_state = M_X_03;
       break;
   }
-  signal_and_sleepi(x_state);
+  signal_and_sleep(x_state, 3);
 }
 
 void dec_yi(){
@@ -154,7 +154,7 @@ void dec_yi(){
       y_state = M_Y_03;
       break;
   }
-  signal_and_sleepi(y_state);
+  signal_and_sleep(y_state, 3);
 }
 
 void mov_x(String inputString){
@@ -173,6 +173,51 @@ void mov_y(String inputString){
     dec_y();
 }
 
+// HEAD FUNCTIONS
+void head_up(int t){
+  digitalWrite(M_Z_01, HIGH);
+  delay(t);
+  digitalWrite(M_Z_01, LOW);
+  delay(t);
+  
+  digitalWrite(M_Z_02, HIGH);
+  delay(t);
+  digitalWrite(M_Z_02, LOW);
+  delay(t);
+  
+  digitalWrite(M_Z_03, HIGH);
+  delay(t);
+  digitalWrite(M_Z_03, LOW);
+  delay(t);
+  
+  digitalWrite(M_Z_04, HIGH);
+  delay(t);
+  digitalWrite(M_Z_04, LOW);
+  delay(t);
+}
+
+void head_down(int t){
+  digitalWrite(M_Z_04, HIGH);
+  delay(t);
+  digitalWrite(M_Z_04, LOW);
+  delay(t);
+  
+  digitalWrite(M_Z_03, HIGH);
+  delay(t);
+  digitalWrite(M_Z_03, LOW);
+  delay(t);
+  
+  digitalWrite(M_Z_02, HIGH);
+  delay(t);
+  digitalWrite(M_Z_02, LOW);
+  delay(t);
+  
+  digitalWrite(M_Z_01, HIGH);
+  delay(t);
+  digitalWrite(M_Z_01, LOW);
+  delay(t);
+}
+
 void setup() {
   Serial.begin(9600);         // Initialize serial
   inputString.reserve(200);   // Reserve 200 bytes for the inputString
@@ -187,6 +232,11 @@ void setup() {
   pinMode(M_Y_03, OUTPUT);
   pinMode(M_Y_04, OUTPUT);
 
+  pinMode(M_Z_01, OUTPUT);
+  pinMode(M_Z_02, OUTPUT);
+  pinMode(M_Z_03, OUTPUT);
+  pinMode(M_Z_04, OUTPUT);
+  
   pinMode(SWITCH_X, INPUT);
   pinMode(SWITCH_Y, INPUT);
 
