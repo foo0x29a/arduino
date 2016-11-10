@@ -18,54 +18,29 @@ int x_state = M_X_01; // Current X pin
 int y_state = M_Y_01; // Current Y pin
 
 // Switch pins
-#define SWITCH_X 0
-#define SWITCH_Y 1
+#define SWITCH_X 5
+#define SWITCH_Y 4
 
 // Current cartesians positions
 int current_x = 0;
 int current_y = 0;
 
+// Switch stuff
+
 const char SPACE_CHAR = ' ';
-
-void setup() {
-  Serial.begin(9600);         // Initialize serial
-  inputString.reserve(200);   // Reserve 200 bytes for the inputString
-
-  pinMode(M_X_01, OUTPUT);
-  pinMode(M_X_02, OUTPUT);
-  pinMode(M_X_03, OUTPUT);
-  pinMode(M_X_04, OUTPUT);
-
-  pinMode(M_Y_01, OUTPUT);
-  pinMode(M_Y_02, OUTPUT);
-  pinMode(M_Y_03, OUTPUT);
-  pinMode(M_Y_04, OUTPUT);
-
-  pinMode(SWITCH_X, INPUT);
-  pinMode(SWITCH_Y, INPUT);
-
-  // Resetting X axis
-  int x_origin = HIGH;
-  while(x_origin == HIGH){
-    dec_x();
-    x_origin = digitalRead(SWITCH_X);
-  }
-  current_x = 0;
-
-  // Resetting Y axis
-  int y_origin = HIGH;
-  while(y_origin == HIGH){
-    dec_y();
-    y_origin = digitalRead(SWITCH_Y);
-  }
-  current_y = 0;
-}
 
 void signal_and_sleep(int pin){
   digitalWrite(pin, HIGH);
-  delay(200);
+  delay(20);
   digitalWrite(pin, LOW);
-  delay(100);
+  delay(20);
+}
+
+void signal_and_sleepi(int pin){
+  digitalWrite(pin, HIGH);
+  delay(2);
+  digitalWrite(pin, LOW);
+  delay(2);
 }
 
 void inc_x(){
@@ -144,6 +119,44 @@ void dec_y(){
   signal_and_sleep(y_state);
 }
 
+void dec_xi(){
+  current_x--;
+  switch(x_state){
+    case M_X_01:
+      x_state = M_X_04;
+      break;
+    case M_X_02:
+      x_state = M_X_01;
+      break;
+    case M_X_03:
+      x_state = M_X_02;
+      break;
+    case M_X_04:
+      x_state = M_X_03;
+      break;
+  }
+  signal_and_sleepi(x_state);
+}
+
+void dec_yi(){
+  current_y--;
+  switch(y_state){
+    case M_Y_01:
+      y_state = M_Y_04;
+      break;
+    case M_Y_02:
+      y_state = M_Y_01;
+      break;
+    case M_Y_03:
+      y_state = M_Y_02;
+      break;
+    case M_Y_04:
+      y_state = M_Y_03;
+      break;
+  }
+  signal_and_sleepi(y_state);
+}
+
 void mov_x(String inputString){
   int desired_x = inputString.toInt();
   while(desired_x > current_x)
@@ -160,7 +173,44 @@ void mov_y(String inputString){
     dec_y();
 }
 
+void setup() {
+  Serial.begin(9600);         // Initialize serial
+  inputString.reserve(200);   // Reserve 200 bytes for the inputString
+
+  pinMode(M_X_01, OUTPUT);
+  pinMode(M_X_02, OUTPUT);
+  pinMode(M_X_03, OUTPUT);
+  pinMode(M_X_04, OUTPUT);
+
+  pinMode(M_Y_01, OUTPUT);
+  pinMode(M_Y_02, OUTPUT);
+  pinMode(M_Y_03, OUTPUT);
+  pinMode(M_Y_04, OUTPUT);
+
+  pinMode(SWITCH_X, INPUT);
+  pinMode(SWITCH_Y, INPUT);
+
+    
+  while(1){
+    if(digitalRead(SWITCH_X) == LOW) break;
+    dec_xi();
+
+  }
+
+  while(1){
+    if(digitalRead(SWITCH_Y) == LOW) break;
+    
+     dec_yi();
+  }
+
+
+}
+
+
 void loop() {
+  
+
+  
   if (stringComplete) {
     Serial.println(inputString);
     if(inputString.startsWith("INC_X"))

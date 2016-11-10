@@ -5,11 +5,11 @@ import subprocess as sub
 import serial
 
 def get_serial_port():
-	#cmd = 'dmesg | egrep ttyACM | cut -f3 -d: | tail -n1'
-	#p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE, shell=True)
-	#out, err = p.communicate()
-	#return '/dev/' + out.strip()
-	return '/dev/ttyUSB0'
+	cmd = 'dmesg | egrep ttyACM | cut -f3 -d: | tail -n1'
+	p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE, shell=True)
+	out, err = p.communicate()
+	return '/dev/' + out.strip()
+	#return '/dev/ttyUSB0'
 
 def serial_write(ser, string):
 	print string
@@ -38,7 +38,12 @@ def draw_circle(xm, ym, r):
 			x += 1
 			err += x * 2 + 1
 		if(x >= 0):
-			return p1 + p2 + p3 + p4
+			#return p1 + p2 + p3 + p4
+			p1.reverse()
+			p2.reverse()
+			p3.reverse()
+			p4.reverse()
+			return p4 + p3 + p2 + p1
 
 def draw_ellipse(xm, ym, a, b):
 	x0 = xm - a
@@ -163,14 +168,26 @@ if __name__=='__main__':
 
 	ser = init()
 	#p = draw_line(100, 100, 200, 400)
-	#p = draw_line(100, 0, 0, 100)
+	#p = draw_line(100, 10, 0, 300)
 	#p = draw_ellipse(100,100,50,75)
-	#p = draw_circle(100,100,50)
+	#p = draw_circle(210,210,30)
 
 	#print p
 	#plot_twister_carpado(p,'sadboi')
-	p = draw_line(0,0,0,100)
-	p += draw_line(0,100,100,200)
-	p += draw_line(100,200,100,100)
-	p += draw_line(100,100,0,0)
+	#p = draw_line(0,0,0,100)
+	#p += draw_line(0,100,100,200)
+	#p += draw_line(100,200,100,100)
+	#p += draw_line(100,100,0,0)
+	
+	p = draw_line(250, 250, 50, 250)
+	draw(ser, p)
+	p = draw_line(50, 250, 50, 50)
+	draw(ser, p)
+	p = draw_line(50, 50, 250, 50)
+	draw(ser, p)
+	p = draw_line(250, 50, 250, 250)
+	draw(ser, p)
+	p = draw_line(250, 250, 150, 400)
+	draw(ser, p)
+	p = draw_line(150, 400, 50, 250)
 	draw(ser, p)
