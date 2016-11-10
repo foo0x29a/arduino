@@ -179,7 +179,7 @@ if __name__=='__main__':
 	#p += draw_line(100,200,100,100)
 	#p += draw_line(100,100,0,0)
 	
-	p = draw_line(250, 250, 50, 250)
+	p = draw_line(250, 250, 250, 50)
 	draw(ser, p)
 	p = draw_line(50, 250, 50, 50)
 	draw(ser, p)

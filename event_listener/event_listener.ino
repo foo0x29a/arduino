@@ -22,7 +22,7 @@ int y_state = M_Y_01; // Current Y pin
 #define M_Z_02 2
 #define M_Z_03 1
 #define M_Z_04 0
-int z_state = M_Z_01; // Current Y pin
+int z_state = M_Z_01; // Current Z pin
 
 // Switch pins
 #define SWITCH_X 5
@@ -43,7 +43,7 @@ void signal_and_sleep(int pin, int t){
   delay(t);
 }
 
-void inc_x(){
+void inc_x(int t){
   current_x++;
   switch(x_state){
     case M_X_01:
@@ -59,10 +59,10 @@ void inc_x(){
       x_state = M_X_01;
       break;
   }
-  signal_and_sleep(x_state, 20);
+  signal_and_sleep(x_state, t);
 }
 
-void inc_y(){
+void inc_y(int t){
   current_y++;
   switch(y_state){
     case M_Y_01:
@@ -78,10 +78,10 @@ void inc_y(){
       y_state = M_Y_01;
       break;
   }
-  signal_and_sleep(y_state, 20);
+  signal_and_sleep(y_state, t);
 }
 
-void dec_x(){
+void dec_x(int t){
   current_x--;
   switch(x_state){
     case M_X_01:
@@ -97,10 +97,10 @@ void dec_x(){
       x_state = M_X_03;
       break;
   }
-  signal_and_sleep(x_state, 20);
+  signal_and_sleep(x_state, t);
 }
 
-void dec_y(){
+void dec_y(int t){
   current_y--;
   switch(y_state){
     case M_Y_01:
@@ -116,106 +116,61 @@ void dec_y(){
       y_state = M_Y_03;
       break;
   }
-  signal_and_sleep(y_state, 20);
+  signal_and_sleep(y_state, t);
 }
 
-void dec_xi(){
-  current_x--;
-  switch(x_state){
-    case M_X_01:
-      x_state = M_X_04;
-      break;
-    case M_X_02:
-      x_state = M_X_01;
-      break;
-    case M_X_03:
-      x_state = M_X_02;
-      break;
-    case M_X_04:
-      x_state = M_X_03;
-      break;
-  }
-  signal_and_sleep(x_state, 3);
-}
-
-void dec_yi(){
-  current_y--;
-  switch(y_state){
-    case M_Y_01:
-      y_state = M_Y_04;
-      break;
-    case M_Y_02:
-      y_state = M_Y_01;
-      break;
-    case M_Y_03:
-      y_state = M_Y_02;
-      break;
-    case M_Y_04:
-      y_state = M_Y_03;
-      break;
-  }
-  signal_and_sleep(y_state, 3);
-}
 
 void mov_x(String inputString){
   int desired_x = inputString.toInt();
   while(desired_x > current_x)
-    inc_x();
+    inc_x(20);
   while(desired_x < current_x)
-    dec_x();
+    dec_x(20);
 }
 
 void mov_y(String inputString){
   int desired_y = inputString.toInt();
   while(desired_y > current_y)
-    inc_y();
+    inc_y(20);
   while(desired_y < current_y)
-    dec_y();
+    dec_y(20);
 }
 
-// HEAD FUNCTIONS
+// HEAD (Z-AXIS) FUNCTIONS
 void head_up(int t){
-  digitalWrite(M_Z_01, HIGH);
-  delay(t);
-  digitalWrite(M_Z_01, LOW);
-  delay(t);
-  
-  digitalWrite(M_Z_02, HIGH);
-  delay(t);
-  digitalWrite(M_Z_02, LOW);
-  delay(t);
-  
-  digitalWrite(M_Z_03, HIGH);
-  delay(t);
-  digitalWrite(M_Z_03, LOW);
-  delay(t);
-  
-  digitalWrite(M_Z_04, HIGH);
-  delay(t);
-  digitalWrite(M_Z_04, LOW);
-  delay(t);
+  switch(z_state){
+    case M_Z_01:
+      z_state = M_Z_02;
+      break;
+    case M_Z_02:
+      z_state = M_Z_03;
+      break;
+    case M_Z_03:
+      z_state = M_Z_04;
+      break;
+    case M_Z_04:
+      z_state = M_Z_01;
+      break;
+  }
+  signal_and_sleep(z_state, t);
 }
 
 void head_down(int t){
-  digitalWrite(M_Z_04, HIGH);
-  delay(t);
-  digitalWrite(M_Z_04, LOW);
-  delay(t);
-  
-  digitalWrite(M_Z_03, HIGH);
-  delay(t);
-  digitalWrite(M_Z_03, LOW);
-  delay(t);
-  
-  digitalWrite(M_Z_02, HIGH);
-  delay(t);
-  digitalWrite(M_Z_02, LOW);
-  delay(t);
-  
-  digitalWrite(M_Z_01, HIGH);
-  delay(t);
-  digitalWrite(M_Z_01, LOW);
-  delay(t);
+  switch(z_state){
+    case M_Z_01:
+      z_state = M_Z_04;
+      break;
+    case M_Z_02:
+      z_state = M_Z_01;
+      break;
+    case M_Z_03:
+      z_state = M_Z_02;
+      break;
+    case M_Z_04:
+      z_state = M_Z_03;
+      break;
+  }
+  signal_and_sleep(z_state, t);
 }
 
 void setup() {
@@ -239,38 +194,39 @@ void setup() {
   
   pinMode(SWITCH_X, INPUT);
   pinMode(SWITCH_Y, INPUT);
-
-    
+  
   while(1){
     if(digitalRead(SWITCH_X) == LOW) break;
-    dec_xi();
+    dec_x(3);
 
+    head_down(20);
+    head_up(20);
   }
 
   while(1){
     if(digitalRead(SWITCH_Y) == LOW) break;
-    
-     dec_yi();
+     dec_y(3);
+     
+     head_down(20);
+     head_up(20);
   }
 
-
+  current_x = 0;
+  current_y = 0;
 }
 
 
-void loop() {
-  
-
-  
+void loop() { 
   if (stringComplete) {
     Serial.println(inputString);
     if(inputString.startsWith("INC_X"))
-      inc_x();
+      inc_x(20);
     else if(inputString.startsWith("INC_Y"))
-      inc_y();
+      inc_y(20);
     else if(inputString.startsWith("DEC_X"))
-      dec_x();
+      dec_x(20);
     else if(inputString.startsWith("DEC_Y"))
-      dec_y();
+      dec_y(20);
     else if(inputString.startsWith("MOV_X"))
       mov_x(inputString);
     else if(inputString.startsWith("MOV_Y"))
