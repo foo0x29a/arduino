@@ -217,8 +217,7 @@ void setup() {
   z_up(s);
   z_up(s);
   z_up(s);
-  z_up(s);
-  z_up(s);  
+  
   
  
   while(1){
@@ -242,16 +241,6 @@ void loop() {
   if (stringComplete) {
     //Serial.println(inputString);
     
-    z_down(s);
-    z_down(s);
-    z_down(s);
-    z_down(s);
-    z_down(s);
-    z_down(s);
-    z_down(s);
-    z_down(s);
-    z_down(s);
-    
     if(inputString.startsWith("INC_X"))
       inc_x(20);
     else if(inputString.startsWith("INC_Y"))
@@ -260,6 +249,28 @@ void loop() {
       dec_x(20);
     else if(inputString.startsWith("DEC_Y"))
       dec_y(20);
+    else if(inputString.startsWith("Z_UP")){
+      z_up(s);
+      z_up(s);
+      z_up(s);
+      z_up(s);
+      z_up(s);
+      z_up(s);
+      z_up(s);
+      z_up(s);
+      z_up(s);
+    }
+    else if(inputString.startsWith("Z_DOWN")){
+      z_down(s);
+      z_down(s);
+      z_down(s);
+      z_down(s);
+      z_down(s);
+      z_down(s);
+      z_down(s);
+      z_down(s);
+      z_down(s);
+    }
     else if(inputString.startsWith("MOV_X"))
       mov_x(inputString);
     else if(inputString.startsWith("MOV_Y"))
@@ -268,15 +279,6 @@ void loop() {
     inputString = "";
     stringComplete = false;
     
-    z_up(s);
-    z_up(s);
-    z_up(s);
-    z_up(s);
-    z_up(s);
-    z_up(s);
-    z_up(s);
-    z_up(s);
-    z_up(s);
   }
 }
 

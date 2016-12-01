@@ -193,6 +193,12 @@ def get():
         elif k=='\x1b[D':
 		serial_write(ser, "DEC_X")
                 print "left"
+        elif k=='\x40':
+		serial_write(ser, "Z_DOWN")
+                print "Z_DOWN"        
+        elif k=='\x32':
+		serial_write(ser, "Z_UP")
+                print "Z_UP"
         else:
                 exit(1)
 
