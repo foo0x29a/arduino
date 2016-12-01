@@ -164,32 +164,40 @@ def init():
 	return ser
 
 
+import sys,tty,termios
+class _Getch:
+    def __call__(self):
+            fd = sys.stdin.fileno()
+            old_settings = termios.tcgetattr(fd)
+            try:
+                tty.setraw(sys.stdin.fileno())
+                ch = sys.stdin.read(3)
+            finally:
+                termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            return ch
+
+def get():
+        inkey = _Getch()
+        while(1):
+                k=inkey()
+                if k!='':break
+        if k=='\x1b[A':
+		serial_write(ser, "INC_Y")
+                print "up"
+        elif k=='\x1b[B':
+		serial_write(ser, "DEC_Y")
+                print "down"
+        elif k=='\x1b[C':
+		serial_write(ser, "INC_X")
+                print "right"
+        elif k=='\x1b[D':
+		serial_write(ser, "DEC_X")
+                print "left"
+        else:
+                exit(1)
+
 if __name__=='__main__':
 
 	ser = init()
-	#p = draw_line(100, 100, 200, 400)
-	p = draw_line(100, 10, 0, 300)
-	#p = draw_ellipse(100,100,50,75)
-	#p = draw_circle(210,210,30)
-	draw(ser, p)
-
-	#print p
-	#plot_twister_carpado(p,'sadboi')
-	#p = draw_line(0,0,0,100)
-	#p += draw_line(0,100,100,200)
-	#p += draw_line(100,200,100,100)
-	#p += draw_line(100,100,0,0)
-	"""
-	p = draw_line(250, 250, 250, 50)
-	draw(ser, p)
-	p = draw_line(50, 250, 50, 50)
-	draw(ser, p)
-	p = draw_line(50, 50, 250, 50)
-	draw(ser, p)
-	p = draw_line(250, 50, 250, 250)
-	draw(ser, p)
-	p = draw_line(250, 250, 150, 400)
-	draw(ser, p)
-	p = draw_line(150, 400, 50, 250)
-	draw(ser, p)
-	"""
+	while(1):
+		get()

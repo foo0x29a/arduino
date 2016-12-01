@@ -18,10 +18,10 @@ int x_state = M_X_01; // Current X pin
 int y_state = M_Y_01; // Current Y pin
 
 // Z axis
-#define M_Z_01 3
-#define M_Z_02 2
-#define M_Z_03 1
-#define M_Z_04 0
+#define M_Z_01 A0
+#define M_Z_02 A1
+#define M_Z_03 A2
+#define M_Z_04 A3
 int z_state = M_Z_01; // Current Z pin
 
 // Switch pins
@@ -31,6 +31,10 @@ int z_state = M_Z_01; // Current Z pin
 // Current cartesians positions
 int current_x = 0;
 int current_y = 0;
+int current_z = 0;
+
+// Head stuff
+int s = 10;
 
 // Switch stuff
 
@@ -119,6 +123,45 @@ void dec_y(int t){
   signal_and_sleep(y_state, t);
 }
 
+void z_up(int t){
+  current_z++;
+  switch(z_state){
+    case M_Z_01:
+      z_state = M_Z_02;
+      break;
+    case M_Z_02:
+      z_state = M_Z_03;
+      break;
+    case M_Z_03:
+      z_state = M_Z_04;
+      break;
+    case M_Z_04:
+      z_state = M_Z_01;
+      break;
+  }
+  signal_and_sleep(z_state, t);
+}
+
+void z_down(int t){
+  current_z--;
+  switch(z_state){
+    case M_Z_01:
+      z_state = M_Z_04;
+      break;
+    case M_Z_02:
+      z_state = M_Z_01;
+      break;
+    case M_Z_03:
+      z_state = M_Z_02;
+      break;
+    case M_Z_04:
+      z_state = M_Z_03;
+      break;
+  }
+  signal_and_sleep(z_state, t);
+}
+
+
 
 void mov_x(String inputString){
   int desired_x = inputString.toInt();
@@ -136,42 +179,7 @@ void mov_y(String inputString){
     dec_y(20);
 }
 
-// HEAD (Z-AXIS) FUNCTIONS
-void head_up(int t){
-  switch(z_state){
-    case M_Z_01:
-      z_state = M_Z_02;
-      break;
-    case M_Z_02:
-      z_state = M_Z_03;
-      break;
-    case M_Z_03:
-      z_state = M_Z_04;
-      break;
-    case M_Z_04:
-      z_state = M_Z_01;
-      break;
-  }
-  signal_and_sleep(z_state, t);
-}
 
-void head_down(int t){
-  switch(z_state){
-    case M_Z_01:
-      z_state = M_Z_04;
-      break;
-    case M_Z_02:
-      z_state = M_Z_01;
-      break;
-    case M_Z_03:
-      z_state = M_Z_02;
-      break;
-    case M_Z_04:
-      z_state = M_Z_03;
-      break;
-  }
-  signal_and_sleep(z_state, t);
-}
 
 void setup() {
   Serial.begin(9600);         // Initialize serial
@@ -195,22 +203,36 @@ void setup() {
   pinMode(SWITCH_X, INPUT);
   pinMode(SWITCH_Y, INPUT);
   
+  
+  // RESET
+   
+  z_up(s);
+  z_up(s);
+  z_up(s);
+  z_up(s);
+  z_up(s);
+  z_up(s);  
+  z_up(s);
+  z_up(s);
+  z_up(s);
+  z_up(s);
+  z_up(s);
+  z_up(s);
+  z_up(s);  
+  
+ 
   while(1){
     if(digitalRead(SWITCH_X) == LOW) break;
-    dec_x(3);
-
-    head_down(20);
-    head_up(20);
+    dec_x(s);
   }
 
   while(1){
     if(digitalRead(SWITCH_Y) == LOW) break;
-     dec_y(3);
-     
-     head_down(20);
-     head_up(20);
+     dec_y(s);
   }
 
+
+  
   current_x = 0;
   current_y = 0;
 }
@@ -218,7 +240,18 @@ void setup() {
 
 void loop() { 
   if (stringComplete) {
-    Serial.println(inputString);
+    //Serial.println(inputString);
+    
+    z_down(s);
+    z_down(s);
+    z_down(s);
+    z_down(s);
+    z_down(s);
+    z_down(s);
+    z_down(s);
+    z_down(s);
+    z_down(s);
+    
     if(inputString.startsWith("INC_X"))
       inc_x(20);
     else if(inputString.startsWith("INC_Y"))
@@ -234,6 +267,16 @@ void loop() {
     delay(50);
     inputString = "";
     stringComplete = false;
+    
+    z_up(s);
+    z_up(s);
+    z_up(s);
+    z_up(s);
+    z_up(s);
+    z_up(s);
+    z_up(s);
+    z_up(s);
+    z_up(s);
   }
 }
 
